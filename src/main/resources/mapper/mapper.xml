@@ -4,4 +4,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mon.memo.mapper.mapper">
+
+<!--    <select id="selectMemberInfoByNum" resultType="team.kyp.kypcoffee.domain.Member">-->
+<!--        SELECT m.memberNum,memberPw,memberId,memberName,memberBday,memberAddress,memberTel,memberPhone,memberEmail,memberEmailYn,memberMileage,i.memberType-->
+<!--        FROM member m left outer join member_info i on m.memberNum = i.memberNum-->
+<!--        WHERE m.memberNum=#{memberNum}-->
+<!--    </select>-->
+<!--    -->
+<!--    <update id="updateMember" parameterType="team.kyp.kypcoffee.domain.Member">-->
+<!--        UPDATE member-->
+<!--        SET  memberPw=#{memberPw}, memberName=#{memberName}, memberBday=#{memberBday}, memberAddress=#{memberAddress},-->
+<!--             memberTel=#{memberTel},memberPhone=#{memberPhone},memberEmail=#{memberEmail}, memberEmailYn=#{memberEmailYn}-->
+<!--        WHERE memberNum=#{memberNum}-->
+<!--    </update>-->
+<!--    -->
+<!--    <insert id="insertMemberInfo" parameterType="team.kyp.kypcoffee.domain.Member">-->
+<!--        INSERT INTO member_info-->
+<!--        VALUES(member_seq.currval,#{memberType})-->
+<!--    </insert>-->
+
+<!--    <delete id="deleteMember" parameterType="team.kyp.kypcoffee.domain.Member">-->
+<!--        DELETE member WHERE memberNum=#{memberNum}-->
+<!--    </delete>-->
+
+<!--    <select id="selectMemberListPaging" resultType="team.kyp.kypcoffee.domain.Member">-->
+<!--        SELECT RN ,memberNum,memberPw,memberId,memberName,memberBday,memberAddress,memberTel,memberPhone,memberEmail,memberEmailYn,memberMileage-->
+<!--        FROM-->
+<!--            (SELECT ROWNUM as RN ,memberNum,memberPw,memberId,memberName,memberBday,memberAddress,memberTel,memberPhone,memberEmail,memberEmailYn,memberMileage-->
+<!--             FROM (SELECT * FROM member-->
+<!--                   ORDER BY memberNum desc))-->
+<!--        WHERE RN BETWEEN (#{section}-1)*100+(#{pageNum}-1)*10+1 AND (#{section}-1)*100+(#{pageNum})*10-->
+<!--    </select>-->
+<!--    -->
 </mapper>
