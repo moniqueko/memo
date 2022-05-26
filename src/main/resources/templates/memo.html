@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon mémo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <style>
+        #grid-container {
+            display: grid;
+            gap: 50px;
+            grid-template-columns: auto auto auto;
+            background-color: #ffffff;
+            padding: 10px;
+        }
+
+        .grid-item {
+            width: 300px;
+            height: 300px;
+            background-color: wheat;
+            border: none;
+            padding: 30px;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+<h1>Mon mémo</h1>
+<div class="container">
+<p>You can write your memo upto 300 characters.</p>
+<form name="memo">
+<input type="text" name="memo" placeholder="Write your memo here"><br>
+    <input type="button" value="Write" onclick="write()" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
+</form>
+
+
+<div id="grid-container">
+<!--    <div class="grid-item">1</div>-->
+<!--    <div class="grid-item">2</div>-->
+<!--    <div class="grid-item">3</div>-->
+<!--    <div class="grid-item">4</div>-->
+<!--    <div class="grid-item">5</div>-->
+<!--    <div class="grid-item">6</div>-->
+<!--    <div class="grid-item">7</div>-->
+<!--    <div class="grid-item">8</div>-->
+<!--    <div class="grid-item">9</div>-->
+</div>
+</div>
+<script>
+    function write(){
+        let memo = document.forms["memo"]["memo"].value;
+
+        $.ajax({
+            type : 'POST',
+            url : '/write',
+            data : JSON.stringify(memo),
+            dataType :'json',
+            accept: 'application/json',
+            contentType : 'application/json; charset=UTF-8',
+            success : function(result) {
+                console.log("데이터 보내기 성공");
+                console.log(result);
+
+                let memosave = document.getElementById('grid-container')
+                memosave.innerHTML = "<div class=\"grid-item\">result</div>";
+
+            },
+            error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: 에러발생"+"\n"+"error: "+error);
+            }
+        }); // ajax 끝
+
+    }
+</script>
+</body>
+</html>
