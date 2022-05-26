@@ -25,7 +25,7 @@ public class MemoController {
 
     private final MemoService memoService;
 
-    @RequestMapping("/write")
+    @RequestMapping("/memo/write")
     @ResponseBody
     public HashMap<String, Object> memo(Model model, @RequestBody String memo, HttpSession session) { //json으로 받아서 저장.
 

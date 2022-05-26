@@ -20,3 +20,14 @@ footer {
     background-color: red;
     grid-area: foot;
 }
+
+#write{
+    width:400px;
+    height:100px;
+    background-color: antiquewhite;
+    border: none;
+    border-radius: 10px;
+}
+#btn{
+    width:80px;
+}

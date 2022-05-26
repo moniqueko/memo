@@ -25,7 +25,7 @@ public class LoginController {
     @RequestMapping("/signin")
     public String login(Model model, @CookieValue(value="rememberId", required=false) Cookie cookie) {
 
-        model.addAttribute("loginCommand", new Login());
+        model.addAttribute("loginCommand", new Login()); //이것 지우면 작동 안함...
 
         if(cookie!=null) {
             System.out.println("쿠키값"+cookie.getValue());
@@ -71,11 +71,13 @@ public class LoginController {
             // 로그인 정보를 기록할 세션 코드
             session.setAttribute("loginInfo", loginInfo);
 
-            return "memo"; //로그인 성공시 메모장 이동
+            return "memo/memo"; //로그인 성공시 메모장 이동
 
         } catch (IdPasswordNotMatchingException e) {
 
             Member member = loginInfoService.checkId(login.getId());
+            System.out.println(member+"IdPasswordNotMatchingException 멤버정보 출력");
+
             String valid = member.getMemberId();
 
             if(!valid.equals("1")){ //회원은 존재할때

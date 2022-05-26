@@ -27,14 +27,22 @@
     </style>
 
 </head>
+<header>test header</header>
 <body>
-<h1>Mon mémo</h1>
+
 <div class="container">
-<p>You can write your memo upto 300 characters.</p>
-<form name="memo">
-<input type="text" name="memo" placeholder="Write your memo here"><br>
-    <input type="button" value="Write" onclick="write()" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
-</form>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+    <h1>Mon mémo</h1>
+        <p>You can write your memo upto 300 characters.</p>
+
+        <form name="writememo" action="/write">
+        <input type="text" id="write" name="memo" placeholder="Write your memo here"><br><br>
+            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
+        </form>
+
+        </div>
+    </div>
 
 
 <div id="grid-container">
@@ -50,12 +58,13 @@
 </div>
 </div>
 <script>
-    function write(){
-        let memo = document.forms["memo"]["memo"].value;
+    function Writememo(){
+        let memo = document.forms["writememo"]["memo"].value;
+        console.log(memo+"정상출력");
 
         $.ajax({
             type : 'POST',
-            url : '/write',
+            url : '/memo/write',
             data : JSON.stringify(memo),
             dataType :'json',
             accept: 'application/json',
@@ -76,4 +85,7 @@
     }
 </script>
 </body>
+<footer>
+    test footer
+</footer>
 </html>
