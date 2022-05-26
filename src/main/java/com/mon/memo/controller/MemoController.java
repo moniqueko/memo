@@ -3,6 +3,7 @@ package com.mon.memo.controller;
 import com.mon.memo.domain.Login;
 import com.mon.memo.domain.LoginInfo;
 import com.mon.memo.domain.Memo;
+import com.mon.memo.domain.MemoCommand;
 import com.mon.memo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -31,11 +32,16 @@ public class MemoController {
 
         LoginInfo log = (LoginInfo) session.getAttribute("loginInfo");
         System.out.println(log+ "세션저장되어있음");
+        System.out.println(memo+ "받아온 정보 출력");
 
-        memoService.write(log.getId(),memo);
+        MemoCommand save = new MemoCommand();
+        save.setMemo(memo);
+        save.setId(log.getId());
+
+        memoService.write(save);
 
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("result", memo);
+        map.put("result", save);
 
         return map;
     }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Mon mémo</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 
@@ -27,13 +28,16 @@
     </style>
 
 </head>
-<header>test header</header>
+<header>
+    <div style="text-align: center">
+    <h1>Mon mémo</h1></header>
+</div>
 <body>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-    <h1>Mon mémo</h1>
+
         <p>You can write your memo upto 300 characters.</p>
 
         <form name="writememo" action="/write">
@@ -73,7 +77,9 @@
                 console.log("데이터 보내기 성공");
                 console.log(result);
 
-                let memosave = document.getElementById('grid-container')
+                let memosave = document.getElementById('grid-container');
+                console.log(memosave);
+
                 memosave.innerHTML = "<div class=\"grid-item\">result</div>";
 
             },
@@ -86,6 +92,6 @@
 </script>
 </body>
 <footer>
-    test footer
+    <div style="text-align: center"><h6>Copyrights All Reserved By Monique</h6></div>
 </footer>
 </html>
