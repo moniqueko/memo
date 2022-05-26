@@ -3,14 +3,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mon.memo.mapper.mapper">
+<mapper namespace="com.mon.memo.mapper.Mapper">
 
-<!--    <select id="selectMemberInfoByNum" resultType="team.kyp.kypcoffee.domain.Member">-->
-<!--        SELECT m.memberNum,memberPw,memberId,memberName,memberBday,memberAddress,memberTel,memberPhone,memberEmail,memberEmailYn,memberMileage,i.memberType-->
-<!--        FROM member m left outer join member_info i on m.memberNum = i.memberNum-->
-<!--        WHERE m.memberNum=#{memberNum}-->
-<!--    </select>-->
-<!--    -->
+    <select id="selectAllMember" resultType="com.mon.memo.domain.Member">
+        SELECT memberNum,memberId,memberEmail
+        FROM member
+    </select>
+
+    <select id="selectByIdAll" resultType="com.mon.memo.domain.Member"><!--Auth 인증때 사용-->
+        SELECT * from member WHERE memberId=#{memberId}
+    </select>
+
+    <insert id="insertMember" parameterType="com.mon.memo.domain.Member">
+        INSERT INTO member
+        VALUES(member_seq.nextval,#{memberId},#{memberPw},#{memberEmail})
+    </insert>
+
+    <insert id="insertMemo" parameterType="com.mon.memo.domain.Memo">
+        INSERT INTO memo
+        VALUES(memo_seq.nextval,#{memberId},#{memo})
+    </insert>
+
 <!--    <update id="updateMember" parameterType="team.kyp.kypcoffee.domain.Member">-->
 <!--        UPDATE member-->
 <!--        SET  memberPw=#{memberPw}, memberName=#{memberName}, memberBday=#{memberBday}, memberAddress=#{memberAddress},-->

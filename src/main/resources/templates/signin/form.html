@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>Mon mémo</title>
+
+    <style>
+        .field-error{
+            margin-bottom:10px;
+            color: #da4747;
+            text-align: center;
+        }
+        #msg{
+            margin-top: 0;
+            margin-bottom:10px;
+            color:whitesmoke;
+            text-align: left;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <h1 class="logo-badge text-whitesmoke"><span class="fa fa-user-circle"></span></h1>
+    </div>
+    <h3 class="text-whitesmoke">회원 로그인</h3><br>
+    <div class="container-content">
+        <form name="logincheck" action="/signin/loginExecute" class="margin-t" commandName="loginCommand" method="POST">
+            <div class="form-group">
+                <input th:if="!${cookie}" type="text" class="form-control" name="id" placeholder="아이디를 입력해주세요" required="">
+                <input th:if="${cookie}" type="text" class="form-control" name="id" th:value="${cookie}">
+            </div>
+            <div class="form-group">
+                <input type="password" name="pw" class="form-control" placeholder="비밀번호를 입력해주세요" required="">
+            </div>
+            <span id="msg"></span>
+            <div class="form-check mb-3 text-left"><label class="text-whitesmoke">
+                <input th:if="!${cookie}" class="form-check-input" type="checkbox" name="rememberlogin" value="0">
+                <input th:if="${cookie}" class="form-check-input" type="checkbox" checked name="rememberlogin" value="1">
+                아이디 기억
+            </label>
+            </div>
+            <div class="field-error" th:errors="*{loginCommand.id}"></div><!--오류메세지 출력-->
+            <div class="d-grid mb-2">
+                <button type="button" onclick="validation()" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;"><i class="fa fa-user"></i>&nbsp;로그인</button>
+            </div>
+
+            <hr>
+            <button type="button" class="btn btn-login btn-block text-uppercase"
+                    onclick="location.href='../register/register'" style="background-color: #865439; border: 0;"> <i class="fas fa-user-plus"></i> 회원가입
+            </button>
+        </form><br>
+        <a href="../member/findPass" onclick="window.open(this.href,'_blank','width=400,height=550,location=no,status=no,top=100'); return false;" class="text-darkyellow"><small>비밀번호를 잊으셨나요?</small></a>
+    </div>
+</div>
+
+<script>
+    function validation() {
+
+        var a = document.forms["logincheck"]["id"].value;
+        var b = document.forms["logincheck"]["pw"].value;
+
+        if (a == null || a == "") {
+            let msg = document.getElementById('msg');
+            msg.innerHTML = "<i class=\"fas fa-exclamation-circle\"></i>아이디가 입력되지 않았습니다.";
+            return false;
+
+        } else if (b == null || b == "") {
+            let msg = document.getElementById('msg');
+            msg.innerHTML = "<i class=\"fas fa-exclamation-circle\"></i>비밀번호가 입력되지 않았습니다.";
+            return false;
+
+        } else {
+            logincheck.submit();
+        }
+
+    }
+</script>
+</body>
+</html>
