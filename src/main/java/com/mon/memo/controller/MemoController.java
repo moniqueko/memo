@@ -9,22 +9,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 public class MemoController {
 
     private final MemoService memoService;
+
+
 
     @RequestMapping("/memo/write")
     @ResponseBody
@@ -46,30 +46,20 @@ public class MemoController {
         return map;
     }
 
-//    @RequestMapping(value = "/write", method = RequestMethod.POST) //회원가입 실행-db전송
-//    public String register(Login login, Errors errors, Model model, HttpSession session,
-//                           HttpServletResponse response) throws IOException {
-//
-//        System.out.println("폼 정보받아오기 테스트" + login.getId());
-//
-//        if (errors.hasErrors()) {
-//            return "signin/regi";
-//        }
-//
-//        try {
-//            memberRegisterService.register(login);
-//            System.out.println("세션저장/회원가입 완료");
-//
-//            return "memo";
-//
-//        } catch (Exception e) {
-//            response.setContentType("text/html; charset=euc-kr");
-//            PrintWriter out = response.getWriter();
-//            out.println("<script>alert('아이디 or 이메일 중복'); </script>");
-//            //out.println("<script>location.href='/qnaBoard' </script>");
-//            out.flush();
-//            return "signin/regi";
-//        }
-//
-//    }
+    @GetMapping(value = "/memo/memo") //저장된 메모 불러오기
+    public String saved(Memo memo, Login login, Errors errors, Model model, HttpSession session,
+                           HttpServletResponse response) {
+
+        LoginInfo log = (LoginInfo) session.getAttribute("loginInfo");
+        String memberId = log.getId();
+
+            List<Memo> memoall = memoService.savedMemo(memberId);
+            System.out.println(memoall+"아이디로 가져온 메모 출력");
+
+            model.addAttribute("savedmemo",memoall);
+
+            return "memo/memo";
+
+
+    }
 }

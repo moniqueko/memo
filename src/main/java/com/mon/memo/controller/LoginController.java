@@ -3,8 +3,10 @@ package com.mon.memo.controller;
 import com.mon.memo.domain.Login;
 import com.mon.memo.domain.LoginInfo;
 import com.mon.memo.domain.Member;
+import com.mon.memo.domain.Memo;
 import com.mon.memo.exception.IdPasswordNotMatchingException;
 import com.mon.memo.service.LoginInfoService;
+import com.mon.memo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 public class LoginController {
     private final LoginInfoService loginInfoService;
+    private final MemoService memoService;
 
     @RequestMapping("/signin")
     public String login(Model model, @CookieValue(value="rememberId", required=false) Cookie cookie) {
@@ -71,7 +75,14 @@ public class LoginController {
             // 로그인 정보를 기록할 세션 코드
             session.setAttribute("loginInfo", loginInfo);
 
-            return "memo/memo"; //로그인 성공시 메모장 이동
+            String memberId = loginInfo.getId();
+
+            List<Memo> memoall = memoService.savedMemo(memberId);
+            System.out.println(memoall+"아이디로 가져온 메모 출력");
+
+            model.addAttribute("savedmemo",memoall);
+
+            return "memo/memo";
 
         } catch (IdPasswordNotMatchingException e) {
 

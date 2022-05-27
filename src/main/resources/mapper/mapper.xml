@@ -24,6 +24,13 @@
         VALUES(memo_seq.nextval,#{memberId},#{memo})
     </insert>
 
+    <select id="memoAll" resultType="com.mon.memo.domain.Memo">
+        SELECT memo
+        FROM memo
+        WHERE memberId=#{memberId}
+        ORDER BY memoNum DESC
+    </select>
+
 <!--    <update id="updateMember" parameterType="team.kyp.kypcoffee.domain.Member">-->
 <!--        UPDATE member-->
 <!--        SET  memberPw=#{memberPw}, memberName=#{memberName}, memberBday=#{memberBday}, memberAddress=#{memberAddress},-->

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Mon mémo</title>
@@ -18,11 +18,12 @@
 
         .grid-item {
             width: 300px;
-            height: 300px;
+            height: 250px;
             background-color: wheat;
+            padding: 15px;
             border: none;
-            padding: 30px;
-            font-size: 12px;
+            border-radius: 10px;
+            font-size: 14px;
             text-align: center;
         }
     </style>
@@ -30,7 +31,9 @@
 </head>
 <header>
     <div style="text-align: center">
-    <h1>Mon mémo</h1></header>
+    <h1>Mon mémo</h1>
+    </div>
+</header>
 </div>
 <body>
 
@@ -42,24 +45,29 @@
 
         <form name="writememo" action="/write">
         <input type="text" id="write" name="memo" placeholder="Write your memo here"><br><br>
-            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
+            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;"><br><br>
         </form>
 
         </div>
     </div>
 
 
-<div id="grid-container">
-<!--    <div class="grid-item">1</div>-->
-<!--    <div class="grid-item">2</div>-->
-<!--    <div class="grid-item">3</div>-->
-<!--    <div class="grid-item">4</div>-->
-<!--    <div class="grid-item">5</div>-->
-<!--    <div class="grid-item">6</div>-->
-<!--    <div class="grid-item">7</div>-->
-<!--    <div class="grid-item">8</div>-->
-<!--    <div class="grid-item">9</div>-->
-</div>
+    <div id="grid-container">
+        <th:block th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
+            <div class="grid-item" th:text="${list.memo}"></div>
+        </th:block>
+
+    <!--    <div class="grid-item">1</div>-->
+    <!--    <div class="grid-item">2</div>-->
+    <!--    <div class="grid-item">3</div>-->
+    <!--    <div class="grid-item">4</div>-->
+    <!--    <div class="grid-item">5</div>-->
+    <!--    <div class="grid-item">6</div>-->
+    <!--    <div class="grid-item">7</div>-->
+    <!--    <div class="grid-item">8</div>-->
+    <!--    <div class="grid-item">9</div>-->
+    </div>
+
 </div>
 <script>
     function Writememo(){
@@ -80,7 +88,12 @@
                 let memosave = document.getElementById('grid-container');
                 console.log(memosave);
 
-                memosave.innerHTML = "<div class=\"grid-item\">result</div>";
+                //memosave.innerHTML = "<div class=\"grid-item\">"+memo+"</div>";
+
+                let newmemo = document.createElement('div');
+                memosave.appendChild(newmemo);
+                newmemo.setAttribute("class","grid-item");
+                newmemo.innerHTML = memo;
 
             },
             error: function(request, status, error){

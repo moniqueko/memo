@@ -13,6 +13,8 @@ public interface Mapper {
     void insertMember(Member member);
     void insertMemo(Memo memo);
 
+    List<Memo> memoAll(String memberId);
+
     void updateMember(Member member);
     void deleteMember(Integer memberNum);
     Member selectByEmail(String memberEmail); //이메일 존재 여부만 판단
