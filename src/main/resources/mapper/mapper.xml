@@ -25,7 +25,7 @@
     </insert>
 
     <select id="memoAll" resultType="com.mon.memo.domain.Memo">
-        SELECT memo
+        SELECT memoNum,memo
         FROM memo
         WHERE memberId=#{memberId}
         ORDER BY memoNum DESC

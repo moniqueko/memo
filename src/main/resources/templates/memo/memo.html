@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Mon mémo</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+
     <link th:href="@{/css/style.css}" rel="stylesheet">
 
     <style>
@@ -26,6 +28,15 @@
             font-size: 14px;
             text-align: center;
         }
+
+        .deletebtndiv{
+            width: 20px;
+            height: 20px;
+            margin-top: 5px;
+            margin-right:5px;
+            float: right;
+            color: saddlebrown;
+        }
     </style>
 
 </head>
@@ -45,7 +56,8 @@
 
         <form name="writememo" action="/write">
         <input type="text" id="write" name="memo" placeholder="Write your memo here"><br><br>
-            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;"><br><br>
+            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
+             <br><br>
         </form>
 
         </div>
@@ -53,26 +65,30 @@
 
 
     <div id="grid-container">
+
         <th:block th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
-            <div class="grid-item" th:text="${list.memo}"></div>
+                <div class="grid-item" th:text="${list.memo}">
+                    <div class="deletebtndiv">
+                    <input type="button" style="float: right"><i class="far fa-window-close"></i>DEL</button>
+                    </div>
+                    </div>
         </th:block>
 
-    <!--    <div class="grid-item">1</div>-->
-    <!--    <div class="grid-item">2</div>-->
-    <!--    <div class="grid-item">3</div>-->
-    <!--    <div class="grid-item">4</div>-->
-    <!--    <div class="grid-item">5</div>-->
-    <!--    <div class="grid-item">6</div>-->
-    <!--    <div class="grid-item">7</div>-->
-    <!--    <div class="grid-item">8</div>-->
-    <!--    <div class="grid-item">9</div>-->
+
     </div>
 
 </div>
 <script>
     function Writememo(){
         let memo = document.forms["writememo"]["memo"].value;
-        console.log(memo+"정상출력");
+
+        console.log(memo+" 정상출력");
+
+        // let data= {
+        //     "memo" : [memo],
+        //     "num" : [no]
+        //
+        // };
 
         $.ajax({
             type : 'POST',
@@ -88,11 +104,28 @@
                 let memosave = document.getElementById('grid-container');
                 console.log(memosave);
 
-                //memosave.innerHTML = "<div class=\"grid-item\">"+memo+"</div>";
+                let newmemo = document.createElement('div'); // 새 메모
+                let deletebtn = document.createElement('button'); // 삭제 버튼
+                let btnatt = document.createElement('a')
+                let deletebtndiv = document.createElement('div');
 
-                let newmemo = document.createElement('div');
-                memosave.appendChild(newmemo);
+
+                memosave.prepend(newmemo); //메모장 앞에서부터 추가되게 함
                 newmemo.setAttribute("class","grid-item");
+
+                deletebtndiv.setAttribute("class","deletebtndiv"); //위치지정
+                deletebtn.setAttribute("onclick","test()");
+                deletebtn.setAttribute("class", "far fa-window-close");
+
+                btnatt.setAttribute("href","../memo/delete/${}");
+                deletebtn.appendChild(btnatt);
+
+                deletebtndiv.appendChild(deletebtn); //div에 버튼넣기
+                newmemo.appendChild(deletebtndiv);
+
+
+
+
                 newmemo.innerHTML = memo;
 
             },
@@ -100,6 +133,10 @@
                 alert("code: "+request.status+"\n"+"message: 에러발생"+"\n"+"error: "+error);
             }
         }); // ajax 끝
+
+        function test(){
+            alert('testing');
+        }
 
     }
 </script>
