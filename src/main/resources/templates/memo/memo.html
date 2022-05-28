@@ -25,17 +25,18 @@
             padding: 15px;
             border: none;
             border-radius: 10px;
+        }
+        .grid-text{
             font-size: 14px;
             text-align: center;
         }
-        .grid-item button{
+        .grid-item a{
             width: 20px;
             height: 20px;
             margin-top: 5px;
             margin-right:5px;
             float: right;
             color: saddlebrown;
-            background-color: #865439;
         }
     </style>
 
@@ -65,15 +66,15 @@
 
 
     <div id="grid-container">
+        <div class="grid-item" th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
+            <a href=""><i class="far fa-window-close"></i></a>
+            <div class="grid-text" th:text="${list.memo}"></div>
+        </div>
 
-        <th:block th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
-                <div class="grid-item" th:text="${list.memo}">
-                    <button value="DEL"><i class="far fa-window-close"></i></button>
-                    </div>
-        </th:block>
-
+    </div>
 
         <!--<div th:if="${keyword==null}" style="text-align: center"> --> <!--  페이징 처리 -->
+    <div>
             <th:block th:switch="${totalCntJudge}">
                 <th:block th:case="91">
                     <th:block th:if="${(section)*90<totalCnt}">
@@ -118,6 +119,7 @@
                     </th:block>
                 </th:block>
             </th:block>
+        </div>
         <!--</div>-->
 
 <!--        <div th:if="${keyword!=null}" style="text-align: center">  &lt;!&ndash;  검색 페이징 처리 &ndash;&gt;-->

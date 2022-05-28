@@ -1,9 +1,6 @@
 package com.mon.memo.controller;
 
-import com.mon.memo.domain.Login;
-import com.mon.memo.domain.LoginInfo;
-import com.mon.memo.domain.Member;
-import com.mon.memo.domain.Memo;
+import com.mon.memo.domain.*;
 import com.mon.memo.exception.IdPasswordNotMatchingException;
 import com.mon.memo.service.LoginInfoService;
 import com.mon.memo.service.MemoService;
@@ -49,7 +46,9 @@ public class LoginController {
     @RequestMapping(value = "/signin/loginExecute", method = RequestMethod.POST)
     public String submit(@ModelAttribute Login login, Errors errors, HttpSession session,
                          @RequestParam(value="rememberlogin",required=false) Boolean rememberlogin,
-                         HttpServletResponse response, Model model, BindingResult bindingResult
+                         HttpServletResponse response, Model model, BindingResult bindingResult,
+                         @RequestParam(value = "section", defaultValue="1") int section,
+                         @RequestParam(value = "pageNum", defaultValue = "1") int pageNum
     ) { // 폼에서 로그인 기능을 요청
 
         if (errors.hasErrors()) {
@@ -77,8 +76,22 @@ public class LoginController {
 
             String memberId = loginInfo.getId();
 
-            List<Memo> memoall = memoService.savedMemo(memberId);
+            int totalCnt = memoService.pagingCount(memberId);
+            Paging paging = new Paging(section, pageNum);
+
+            System.out.println(totalCnt);
+            List<Memo> memoall = memoService.selectAllMemo(paging);
+            System.out.println(memoall +"paing");
+            String totalCntJudge = memoService.totalCntJudge(totalCnt);
+            System.out.println(totalCntJudge+" 토탈?");
+
+            //List<Memo> memoall = memoService.savedMemo(memberId);
             System.out.println(memoall+"아이디로 가져온 메모 출력");
+
+            model.addAttribute("totalCnt", totalCnt);
+            model.addAttribute("totalCntJudge", totalCntJudge);
+            model.addAttribute("section", section);
+            model.addAttribute("pageNum", pageNum);
 
             model.addAttribute("savedmemo",memoall);
 

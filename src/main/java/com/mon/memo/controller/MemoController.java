@@ -43,7 +43,6 @@ public class MemoController {
 
     @GetMapping(value = "/memo/memo") //저장된 메모 불러오기
     public String saved(Memo memo, Login login, Errors errors, Model model, HttpSession session,
-                           HttpServletResponse response,
     @RequestParam(value = "section", defaultValue="1") int section,
     @RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
 
@@ -56,8 +55,10 @@ public class MemoController {
 
 
             int totalCnt = memoService.pagingCount(memberId);
+            Paging paging = new Paging(section, pageNum);
+
             System.out.println(totalCnt);
-            List<Memo> memoall = memoService.selectAllMemo(new Paging(section, pageNum));
+            List<Memo> memoall = memoService.selectAllMemo(paging);
         System.out.println(memoall);
             String totalCntJudge = memoService.totalCntJudge(totalCnt);
         System.out.println(totalCntJudge+" 토탈?");
