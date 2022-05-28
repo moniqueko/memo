@@ -28,14 +28,14 @@
             font-size: 14px;
             text-align: center;
         }
-
-        .deletebtndiv{
+        .grid-item button{
             width: 20px;
             height: 20px;
             margin-top: 5px;
             margin-right:5px;
             float: right;
             color: saddlebrown;
+            background-color: #865439;
         }
     </style>
 
@@ -68,12 +68,104 @@
 
         <th:block th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
                 <div class="grid-item" th:text="${list.memo}">
-                    <div class="deletebtndiv">
-                    <input type="button" style="float: right"><i class="far fa-window-close"></i>DEL</button>
-                    </div>
+                    <button value="DEL"><i class="far fa-window-close"></i></button>
                     </div>
         </th:block>
 
+
+        <!--<div th:if="${keyword==null}" style="text-align: center"> --> <!--  페이징 처리 -->
+            <th:block th:switch="${totalCntJudge}">
+                <th:block th:case="91">
+                    <th:block th:if="${(section)*90<totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/qnaBoard(section=${section}-1, pageNum=10)}"> << </a>
+                            </th:block>
+                            <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                            <th:block th:if="${page==10}">
+                                <a th:href="@{/qnaBoard(section=${section+1}, pageNum=1)}"> >> </a>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${(section)*90>totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/qnaBoard(section=${(section)-1}, pageNum=10)}"> << </a>
+                            </th:block>
+                            <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${(section)*90==totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/qnaBoard(section=${(section)-1}, pageNum=10)}"> << </a>
+                            </th:block>
+                            <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        </th:block>
+                    </th:block>
+
+                </th:block>
+                <th:block th:case="90">
+                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                        <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                    </th:block>
+                </th:block>
+                <th:block th:case="89">
+                    <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
+                        <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                    </th:block>
+                </th:block>
+            </th:block>
+        <!--</div>-->
+
+<!--        <div th:if="${keyword!=null}" style="text-align: center">  &lt;!&ndash;  검색 페이징 처리 &ndash;&gt;-->
+<!--            <th:block th:switch="${totalCntJudge}">-->
+<!--                <th:block th:case="101">-->
+<!--                    <th:block th:if="${(section)*100<totalCnt}">-->
+<!--                        <th:block th:each="page : ${#numbers.sequence(1,10,1)}">-->
+<!--                            <th:block th:if="${section >1 && page==1}">-->
+<!--                                <a th:href="@{/qnaBoard/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << </a>-->
+<!--                            </th:block>-->
+<!--                            <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>-->
+<!--                            <th:block th:if="${page==10}">-->
+<!--                                <a th:href="@{/qnaBoard/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> </a>-->
+<!--                            </th:block>-->
+<!--                        </th:block>-->
+<!--                    </th:block>-->
+
+<!--                    <th:block th:if="${(section)*100>totalCnt}">-->
+<!--                        <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+9)-((section)-1)*100)/10) ,1)}">-->
+<!--                            <th:block th:if="${section >1 && page==1}">-->
+<!--                                <a th:href="@{/qnaBoard/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>-->
+<!--                            </th:block>-->
+<!--                            <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>-->
+<!--                        </th:block>-->
+<!--                    </th:block>-->
+
+<!--                    <th:block th:if="${(section)*100==totalCnt}">-->
+<!--                        <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">-->
+<!--                            <th:block th:if="${section >1 && page==1}">-->
+<!--                                <a th:href="@{/qnaBoard/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>-->
+<!--                            </th:block>-->
+<!--                            <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>-->
+<!--                        </th:block>-->
+<!--                    </th:block>-->
+
+<!--                </th:block>-->
+<!--                <th:block th:case="100">-->
+<!--                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">-->
+<!--                        <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>-->
+<!--                    </th:block>-->
+<!--                </th:block>-->
+<!--                <th:block th:case="99">-->
+<!--                    <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+9)/10),1)}">-->
+<!--                        <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>-->
+<!--                    </th:block>-->
+<!--                </th:block>-->
+<!--            </th:block>-->
+<!--        </div>-->
 
     </div>
 
@@ -122,9 +214,6 @@
 
                 deletebtndiv.appendChild(deletebtn); //div에 버튼넣기
                 newmemo.appendChild(deletebtndiv);
-
-
-
 
                 newmemo.innerHTML = memo;
 

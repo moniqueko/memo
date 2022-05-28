@@ -1,9 +1,6 @@
 package com.mon.memo.controller;
 
-import com.mon.memo.domain.Login;
-import com.mon.memo.domain.LoginInfo;
-import com.mon.memo.domain.Memo;
-import com.mon.memo.domain.MemoCommand;
+import com.mon.memo.domain.*;
 import com.mon.memo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -33,7 +30,7 @@ public class MemoController {
         System.out.println(memo+ "받아온 정보 출력");
 
         MemoCommand save = new MemoCommand();
-        save.setMemo(memo);
+        save.setMemo(memo.replaceAll("\"", ""));
         save.setId(log.getId());
 
         memoService.write(save);
@@ -46,15 +43,30 @@ public class MemoController {
 
     @GetMapping(value = "/memo/memo") //저장된 메모 불러오기
     public String saved(Memo memo, Login login, Errors errors, Model model, HttpSession session,
-                           HttpServletResponse response) {
+                           HttpServletResponse response,
+    @RequestParam(value = "section", defaultValue="1") int section,
+    @RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
 
         LoginInfo log = (LoginInfo) session.getAttribute("loginInfo");
         String memberId = log.getId();
 
-            List<Memo> memoall = memoService.savedMemo(memberId);
-            System.out.println(memoall+"아이디로 가져온 메모 출력");
+            //List<Memo> memoall = memoService.savedMemo(memberId);
+            //System.out.println(memoall+"아이디로 가져온 메모 출력");
+            //model.addAttribute("savedmemo",memoall);
 
-            model.addAttribute("savedmemo",memoall);
+
+            int totalCnt = memoService.pagingCount(memberId);
+            System.out.println(totalCnt);
+            List<Memo> memoall = memoService.selectAllMemo(new Paging(section, pageNum));
+        System.out.println(memoall);
+            String totalCntJudge = memoService.totalCntJudge(totalCnt);
+        System.out.println(totalCntJudge+" 토탈?");
+
+            model.addAttribute("totalCnt", totalCnt);
+            model.addAttribute("totalCntJudge", totalCntJudge);
+            model.addAttribute("section", section);
+            model.addAttribute("pageNum", pageNum);
+            model.addAttribute("savedmemo", memoall);
 
             return "memo/memo";
 

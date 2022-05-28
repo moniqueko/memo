@@ -3,10 +3,12 @@ package com.mon.memo.service;
 import com.mon.memo.domain.Member;
 import com.mon.memo.domain.Memo;
 import com.mon.memo.domain.MemoCommand;
+import com.mon.memo.domain.Paging;
 import com.mon.memo.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,35 @@ public class MemoServiceImpl implements MemoService{
     @Override
     public List<Memo> savedMemo(String memberId) {
         return mapper.memoAll(memberId);
+    }
+
+
+    @Override
+    public Integer pagingCount(String memberId) {
+        Integer count = mapper.pagingCount(memberId);
+        return count;
+    }
+
+    @Override
+    public Integer pagingCountSearch(Paging paging) {
+        Integer count = mapper.pagingCountSearch(paging);
+        return count;
+    }
+
+    @Override
+    public List<Memo> selectAllMemo(Paging paging) { //리스트로 출력시
+        List<Memo> list = mapper.selectBoardPaging(paging);
+        return list;
+    }
+
+    @Override
+    public String totalCntJudge(int totalCnt) {
+        String judge = "";
+        if(totalCnt > 100) judge = "101";
+        if(totalCnt == 100) judge = "100";
+        if(totalCnt < 100) judge = "99";
+
+        return judge;
     }
 
 
