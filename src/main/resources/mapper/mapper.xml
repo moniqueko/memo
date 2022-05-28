@@ -24,6 +24,11 @@
         VALUES(memo_seq.nextval,#{memberId},#{memo})
     </insert>
 
+    <delete id="deleteMemo" parameterType="com.mon.memo.domain.Memo">
+        DELETE memo
+        WHERE memoNum=#{memoNum}
+    </delete>
+
     <select id="memoAll" resultType="com.mon.memo.domain.Memo">
         SELECT memoNum,memo
         FROM memo
@@ -35,8 +40,8 @@
         SELECT *
         FROM (SELECT ROWNUM AS RN, memoNum, memo
               FROM (SELECT memoNum,memo
-                    FROM memo)
-                    ORDER BY memoNum DESC))
+                    FROM memo WHERE memberId=#{memberId})
+                    ORDER BY memoNum DESC)
         WHERE RN BETWEEN (#{section}-1)*90 + (#{pageNum}-1)*9 +1 and (#{section}-1)*90 + (#{pageNum}) * 9
     </select>
 
@@ -44,7 +49,11 @@
         SELECT COUNT(*) FROM memo WHERE memberId=#{memberId}
     </select>
 
-    <select id="selectSearchPaging" resultType="com.mon.memo.domain.Memo">
+    <select id="pagingCountSearch" resultType="int">
+        SELECT COUNT(*) FROM memo where memberId=#{memberId} and REGEXP_LIKE(memo,#{keyword})
+    </select>
+
+    <select id="selectSearchPaging" parameterType="com.mon.memo.domain.Paging" resultType="com.mon.memo.domain.Memo">
         SELECT RN ,memoNum, memo
         FROM
             (SELECT ROWNUM as RN ,memoNum, memo
@@ -52,6 +61,7 @@
             ORDER BY memoNum DESC) where REGEXP_LIKE(memo,#{keyword}))
         WHERE RN BETWEEN (#{section}-1)*90+(#{pageNum}-1)*9+1 AND (#{section}-1)*90+(#{pageNum})*9
     </select>
+
 </mapper>
 
 

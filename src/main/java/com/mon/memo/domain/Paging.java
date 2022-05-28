@@ -1,13 +1,23 @@
 package com.mon.memo.domain;
 
 public class Paging {
+    private String memberId;
+    private String keyword;
+    private int section, pageNum;
 
     public Paging() {}
 
-    public Paging(int section, int pageNum, int productType) {
+    public Paging(String memberId, String keyword, int section, int pageNum) {
+        this.memberId = memberId;
+        this.keyword = keyword;
         this.section = section;
         this.pageNum = pageNum;
-        this.productType = productType;
+    }
+
+    public Paging(String memberId, int section, int pageNum) {
+        this.memberId = memberId;
+        this.section = section;
+        this.pageNum = pageNum;
     }
 
     public Paging(int section, int pageNum) {
@@ -15,15 +25,12 @@ public class Paging {
         this.pageNum = pageNum;
     }
 
-    public Paging(String keyword, int section, int pageNum) {
-        this.keyword = keyword;
-        this.section = section;
-        this.pageNum = pageNum;
-    }
+//    public Paging(String keyword, int section, int pageNum) {
+//        this.keyword = keyword;
+//        this.section = section;
+//        this.pageNum = pageNum;
+//    }
 
-    private int productType;
-    private String keyword;
-    private int section, pageNum;
 
     public int getSection() {
         return section;

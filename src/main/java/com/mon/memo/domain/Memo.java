@@ -7,6 +7,7 @@ public class Memo {
     private int memoNum;
     private String memberId;
     private String memo;
+    private String keyword;
 
     public Memo(){}
 

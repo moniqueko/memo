@@ -4,11 +4,12 @@ import com.mon.memo.domain.Memo;
 import com.mon.memo.domain.MemoCommand;
 import com.mon.memo.domain.Paging;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface MemoService {
     void write(MemoCommand memoCommand);
+    void delete(Integer memoNum);
+
     List<Memo> savedMemo(String memberId);
     List<Memo> selectAllMemo(Paging paging);
 
@@ -16,6 +17,8 @@ public interface MemoService {
     Integer pagingCount(String memberId);
 
     Integer pagingCountSearch(Paging paging);
+    List<Memo> selectSearchPaging(Paging paging);
+
 
 
 

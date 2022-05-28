@@ -46,19 +46,23 @@
     <h1>Mon mémo</h1>
     </div>
 </header>
-</div>
+
 <body>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-
+            <form action="/memo/search" method="GET">
+                <div style="text-align: center">
+                <input name="keyword" type="text" placeholder="Search memo content" style="background-color: white;border: none"> <button type="submit" class="btn btn-primary btn-sm" style="background-color: #865439; border: 0;"><i class="fas fa-search"></i></button>
+        </div>
+        </form><br><br>
         <p>You can write your memo upto 300 characters.</p>
 
         <form name="writememo" action="/write">
         <input type="text" id="write" name="memo" placeholder="Write your memo here"><br><br>
             <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
-             <br><br>
+            <br><br>
         </form>
 
         </div>
@@ -67,24 +71,23 @@
 
     <div id="grid-container">
         <div class="grid-item" th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
-            <a href=""><i class="far fa-window-close"></i></a>
+            <a th:href="@{/memo/delete/{memoNum}(memoNum=${list.memoNum})}"><i class="far fa-window-close"></i></a>
             <div class="grid-text" th:text="${list.memo}"></div>
         </div>
 
     </div>
 
-        <!--<div th:if="${keyword==null}" style="text-align: center"> --> <!--  페이징 처리 -->
-    <div>
+        <div th:if="${keyword==null}" style="text-align: center"><!--  페이징 처리 -->
             <th:block th:switch="${totalCntJudge}">
                 <th:block th:case="91">
                     <th:block th:if="${(section)*90<totalCnt}">
                         <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
                             <th:block th:if="${section >1 && page==1}">
-                                <a th:href="@{/qnaBoard(section=${section}-1, pageNum=10)}"> << </a>
+                                <a th:href="@{/memo(section=${section}-1, pageNum=10)}"> << </a>
                             </th:block>
-                            <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
                             <th:block th:if="${page==10}">
-                                <a th:href="@{/qnaBoard(section=${section+1}, pageNum=1)}"> >> </a>
+                                <a th:href="@{/memo(section=${section+1}, pageNum=1)}"> >> </a>
                             </th:block>
                         </th:block>
                     </th:block>
@@ -92,82 +95,83 @@
                     <th:block th:if="${(section)*90>totalCnt}">
                         <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
                             <th:block th:if="${section >1 && page==1}">
-                                <a th:href="@{/qnaBoard(section=${(section)-1}, pageNum=10)}"> << </a>
+                                <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
                             </th:block>
-                            <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
                         </th:block>
                     </th:block>
 
                     <th:block th:if="${(section)*90==totalCnt}">
                         <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
                             <th:block th:if="${section >1 && page==1}">
-                                <a th:href="@{/qnaBoard(section=${(section)-1}, pageNum=10)}"> << </a>
+                                <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
                             </th:block>
-                            <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
                         </th:block>
                     </th:block>
 
                 </th:block>
                 <th:block th:case="90">
                     <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
-                        <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
                     </th:block>
                 </th:block>
                 <th:block th:case="89">
                     <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
-                        <a th:href="@{/qnaBoard(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
                     </th:block>
                 </th:block>
             </th:block>
         </div>
-        <!--</div>-->
 
-<!--        <div th:if="${keyword!=null}" style="text-align: center">  &lt;!&ndash;  검색 페이징 처리 &ndash;&gt;-->
-<!--            <th:block th:switch="${totalCntJudge}">-->
-<!--                <th:block th:case="101">-->
-<!--                    <th:block th:if="${(section)*100<totalCnt}">-->
-<!--                        <th:block th:each="page : ${#numbers.sequence(1,10,1)}">-->
-<!--                            <th:block th:if="${section >1 && page==1}">-->
-<!--                                <a th:href="@{/qnaBoard/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << </a>-->
-<!--                            </th:block>-->
-<!--                            <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>-->
-<!--                            <th:block th:if="${page==10}">-->
-<!--                                <a th:href="@{/qnaBoard/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> </a>-->
-<!--                            </th:block>-->
-<!--                        </th:block>-->
-<!--                    </th:block>-->
+    <div th:if="${keyword!=null}" style="text-align: center">  <!--  검색 페이징 처리 -->
+        <th:block th:switch="${totalCntJudge}">
+            <th:block th:case="91">
+                <th:block th:if="${(section)*90<totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << </a>
+                        </th:block>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        <th:block th:if="${page==10}">
+                            <a th:href="@{/memo/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> </a>
+                        </th:block>
+                    </th:block>
+                </th:block>
 
-<!--                    <th:block th:if="${(section)*100>totalCnt}">-->
-<!--                        <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+9)-((section)-1)*100)/10) ,1)}">-->
-<!--                            <th:block th:if="${section >1 && page==1}">-->
-<!--                                <a th:href="@{/qnaBoard/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>-->
-<!--                            </th:block>-->
-<!--                            <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>-->
-<!--                        </th:block>-->
-<!--                    </th:block>-->
+                <th:block th:if="${(section)*90>totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>
+                        </th:block>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                    </th:block>
+                </th:block>
 
-<!--                    <th:block th:if="${(section)*100==totalCnt}">-->
-<!--                        <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">-->
-<!--                            <th:block th:if="${section >1 && page==1}">-->
-<!--                                <a th:href="@{/qnaBoard/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>-->
-<!--                            </th:block>-->
-<!--                            <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>-->
-<!--                        </th:block>-->
-<!--                    </th:block>-->
+                <th:block th:if="${(section)*90==totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>
+                        </th:block>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                    </th:block>
+                </th:block>
 
-<!--                </th:block>-->
-<!--                <th:block th:case="100">-->
-<!--                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">-->
-<!--                        <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>-->
-<!--                    </th:block>-->
-<!--                </th:block>-->
-<!--                <th:block th:case="99">-->
-<!--                    <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+9)/10),1)}">-->
-<!--                        <a th:href="@{/qnaBoard/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>-->
-<!--                    </th:block>-->
-<!--                </th:block>-->
-<!--            </th:block>-->
-<!--        </div>-->
+            </th:block>
+            <th:block th:case="90">
+                <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                    <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
+                </th:block>
+            </th:block>
+            <th:block th:case="89">
+                <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
+                    <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
+                </th:block>
+            </th:block>
+        </th:block>
+    </div>
+
+
 
     </div>
 
@@ -224,10 +228,6 @@
                 alert("code: "+request.status+"\n"+"message: 에러발생"+"\n"+"error: "+error);
             }
         }); // ajax 끝
-
-        function test(){
-            alert('testing');
-        }
 
     }
 </script>

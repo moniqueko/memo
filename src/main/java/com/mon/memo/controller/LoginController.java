@@ -44,11 +44,13 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/signin/loginExecute", method = RequestMethod.POST)
-    public String submit(@ModelAttribute Login login, Errors errors, HttpSession session,
+    public String submit(@ModelAttribute("Paging") Paging paging,
+            @ModelAttribute Login login, Errors errors, HttpSession session,
                          @RequestParam(value="rememberlogin",required=false) Boolean rememberlogin,
                          HttpServletResponse response, Model model, BindingResult bindingResult,
                          @RequestParam(value = "section", defaultValue="1") int section,
-                         @RequestParam(value = "pageNum", defaultValue = "1") int pageNum
+                         @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                         @RequestParam(value="keyword", required = false) String keyword
     ) { // 폼에서 로그인 기능을 요청
 
         if (errors.hasErrors()) {
@@ -73,27 +75,40 @@ public class LoginController {
 
             // 로그인 정보를 기록할 세션 코드
             session.setAttribute("loginInfo", loginInfo);
-
             String memberId = loginInfo.getId();
 
-            int totalCnt = memoService.pagingCount(memberId);
-            Paging paging = new Paging(section, pageNum);
+            if (keyword==null) {
+                paging = new Paging(memberId, section, pageNum);
 
-            System.out.println(totalCnt);
-            List<Memo> memoall = memoService.selectAllMemo(paging);
-            System.out.println(memoall +"paing");
-            String totalCntJudge = memoService.totalCntJudge(totalCnt);
-            System.out.println(totalCntJudge+" 토탈?");
+                int totalCnt = memoService.pagingCount(memberId);
 
-            //List<Memo> memoall = memoService.savedMemo(memberId);
-            System.out.println(memoall+"아이디로 가져온 메모 출력");
+                List<Memo> memoall = memoService.selectSearchPaging(paging);
+                String totalCntJudge = memoService.totalCntJudge(totalCnt);
 
-            model.addAttribute("totalCnt", totalCnt);
-            model.addAttribute("totalCntJudge", totalCntJudge);
-            model.addAttribute("section", section);
-            model.addAttribute("pageNum", pageNum);
+                model.addAttribute("totalCnt", totalCnt);
+                model.addAttribute("totalCntJudge", totalCntJudge);
+                model.addAttribute("section", section);
+                model.addAttribute("pageNum", pageNum);
+                model.addAttribute("savedmemo", memoall);
+                System.out.println("키워드 없음 실행");
 
-            model.addAttribute("savedmemo",memoall);
+            }else if(keyword!=null){
+
+                paging = new Paging(memberId, keyword, section, pageNum);
+                int totalCnt = memoService.pagingCountSearch(paging);
+
+                List<Memo> memoall = memoService.selectSearchPaging(paging);
+                String totalCntJudge =  memoService.totalCntJudge(totalCnt);
+
+                model.addAttribute("totalCntJudge", totalCntJudge);
+                model.addAttribute("totalCnt", totalCnt);
+                model.addAttribute("section", section);
+                model.addAttribute("pageNum", pageNum);
+                model.addAttribute("savedmemo", memoall);
+                model.addAttribute("keyword", keyword);
+                System.out.println("키워드 있음 실행");
+
+            }
 
             return "memo/memo";
 

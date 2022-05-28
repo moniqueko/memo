@@ -28,6 +28,11 @@ public class MemoServiceImpl implements MemoService{
     }
 
     @Override
+    public void delete(Integer memoNum) {
+        mapper.deleteMemo(memoNum);
+    }
+
+    @Override
     public List<Memo> savedMemo(String memberId) {
         return mapper.memoAll(memberId);
     }
@@ -46,8 +51,14 @@ public class MemoServiceImpl implements MemoService{
     }
 
     @Override
+    public List<Memo> selectSearchPaging(Paging paging) {
+        List<Memo> list = mapper.selectSearchPaging(paging);
+        return list;
+    }
+
+    @Override
     public List<Memo> selectAllMemo(Paging paging) { //리스트로 출력시
-        List<Memo> list = mapper.selectBoardPaging(paging);
+        List<Memo> list = mapper.selectAllMemo(paging);
         return list;
     }
 
