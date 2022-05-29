@@ -5,6 +5,22 @@ public class Paging {
     private String keyword;
     private int section, pageNum;
 
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     public Paging() {}
 
     public Paging(String memberId, String keyword, int section, int pageNum) {

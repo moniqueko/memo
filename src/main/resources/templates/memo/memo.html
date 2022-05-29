@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Mon mémo</title>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
 
@@ -27,7 +28,7 @@
             border-radius: 10px;
         }
         .grid-text{
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
         }
         .grid-item a{
@@ -75,100 +76,6 @@
             <div class="grid-text" th:text="${list.memo}"></div>
         </div>
 
-    </div>
-
-        <div th:if="${keyword==null}" style="text-align: center"><!--  페이징 처리 -->
-            <th:block th:switch="${totalCntJudge}">
-                <th:block th:case="91">
-                    <th:block th:if="${(section)*90<totalCnt}">
-                        <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
-                            <th:block th:if="${section >1 && page==1}">
-                                <a th:href="@{/memo(section=${section}-1, pageNum=10)}"> << </a>
-                            </th:block>
-                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
-                            <th:block th:if="${page==10}">
-                                <a th:href="@{/memo(section=${section+1}, pageNum=1)}"> >> </a>
-                            </th:block>
-                        </th:block>
-                    </th:block>
-
-                    <th:block th:if="${(section)*90>totalCnt}">
-                        <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
-                            <th:block th:if="${section >1 && page==1}">
-                                <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
-                            </th:block>
-                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
-                        </th:block>
-                    </th:block>
-
-                    <th:block th:if="${(section)*90==totalCnt}">
-                        <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
-                            <th:block th:if="${section >1 && page==1}">
-                                <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
-                            </th:block>
-                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
-                        </th:block>
-                    </th:block>
-
-                </th:block>
-                <th:block th:case="90">
-                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
-                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
-                    </th:block>
-                </th:block>
-                <th:block th:case="89">
-                    <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
-                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
-                    </th:block>
-                </th:block>
-            </th:block>
-        </div>
-
-    <div th:if="${keyword!=null}" style="text-align: center">  <!--  검색 페이징 처리 -->
-        <th:block th:switch="${totalCntJudge}">
-            <th:block th:case="91">
-                <th:block th:if="${(section)*90<totalCnt}">
-                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
-                        <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << </a>
-                        </th:block>
-                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
-                        <th:block th:if="${page==10}">
-                            <a th:href="@{/memo/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> </a>
-                        </th:block>
-                    </th:block>
-                </th:block>
-
-                <th:block th:if="${(section)*90>totalCnt}">
-                    <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
-                        <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>
-                        </th:block>
-                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
-                    </th:block>
-                </th:block>
-
-                <th:block th:if="${(section)*90==totalCnt}">
-                    <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
-                        <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << </a>
-                        </th:block>
-                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
-                    </th:block>
-                </th:block>
-
-            </th:block>
-            <th:block th:case="90">
-                <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
-                    <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
-                </th:block>
-            </th:block>
-            <th:block th:case="89">
-                <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
-                    <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
-                </th:block>
-            </th:block>
-        </th:block>
     </div>
 
 
@@ -233,6 +140,102 @@
 </script>
 </body>
 <footer>
+    <div th:if="${keyword==null}" style="text-align: center"><!--  페이징 처리 -->
+실행
+        <th:block th:switch="${totalCntJudge}">
+            <th:block th:case="91">
+                <th:block th:if="${(section)*90<totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo(section=${section}-1, pageNum=10)}"> << BACK </a>
+                        </th:block>
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        <th:block th:if="${page==10}">
+                            <a th:href="@{/memo(section=${section+1}, pageNum=1)}"> >> NEXT </a>
+                        </th:block>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${(section)*90>totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << BACK </a>
+                        </th:block>
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${(section)*90==totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
+                        </th:block>
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                    </th:block>
+                </th:block>
+
+            </th:block>
+            <th:block th:case="90">
+                <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                    <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                </th:block>
+            </th:block>
+            <th:block th:case="89">
+                <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
+                    <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                </th:block>
+            </th:block>
+        </th:block>
+    </div>
+
+    <div th:if="${keyword!=null}" style="text-align: center">  <!--  검색 페이징 처리 -->
+        <th:block th:switch="${totalCntJudge}">
+            <th:block th:case="91">
+                <th:block th:if="${(section)*90<totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << BACK </a>
+                        </th:block>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        <th:block th:if="${page==10}">
+                            <a th:href="@{/memo/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> </a>
+                        </th:block>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${(section)*90>totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << BACK </a>
+                        </th:block>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${(section)*90==totalCnt}">
+                    <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
+                        <th:block th:if="${section >1 && page==1}">
+                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << BACK </a>
+                        </th:block>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                    </th:block>
+                </th:block>
+
+            </th:block>
+            <th:block th:case="90">
+                <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                    <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
+                </th:block>
+            </th:block>
+            <th:block th:case="89">
+                <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
+                    <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
+                </th:block>
+            </th:block>
+        </th:block>
+    </div>
+
+    <br><br>
     <div style="text-align: center"><h6>Copyrights All Reserved By Monique</h6></div>
 </footer>
 </html>

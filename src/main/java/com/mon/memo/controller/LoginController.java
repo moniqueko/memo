@@ -82,7 +82,7 @@ public class LoginController {
 
                 int totalCnt = memoService.pagingCount(memberId);
 
-                List<Memo> memoall = memoService.selectSearchPaging(paging);
+                List<Memo> memoall = memoService.selectAllMemo(paging);
                 String totalCntJudge = memoService.totalCntJudge(totalCnt);
 
                 model.addAttribute("totalCnt", totalCnt);

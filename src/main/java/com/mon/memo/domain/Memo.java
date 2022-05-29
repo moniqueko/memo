@@ -5,6 +5,15 @@ import lombok.Data;
 @Data
 public class Memo {
     private int memoNum;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     private String memberId;
     private String memo;
     private String keyword;
