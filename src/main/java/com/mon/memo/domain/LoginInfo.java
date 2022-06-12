@@ -9,6 +9,11 @@ public class LoginInfo { //로그인시
     private String pw;
     private String email;
 
+    public LoginInfo(String id, String pw) {
+        this.id = id;
+        this.pw = pw;
+    }
+
     public LoginInfo(String id, int no, String pw, String email) {
         this.id = id;
         this.no = no;

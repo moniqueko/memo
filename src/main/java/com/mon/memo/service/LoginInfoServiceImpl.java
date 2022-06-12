@@ -16,7 +16,7 @@ public class LoginInfoServiceImpl implements LoginInfoService{
     Mapper mapper;
 
     @Override
-    public LoginInfo check(String id, String email, int no, String pw) {
+    public LoginInfo check(String id, String pw) {
 
         Member member = mapper.selectByIdAll(id);
 

@@ -53,13 +53,23 @@
         SELECT COUNT(*) FROM memo where memberId=#{memberId} and REGEXP_LIKE(memo,#{keyword})
     </select>
 
+<!--    <select id="selectSearchPaging" parameterType="com.mon.memo.domain.Paging" resultType="com.mon.memo.domain.Memo">-->
+<!--        SELECT RN ,memoNum, memo-->
+<!--        FROM (SELECT ROWNUM AS RN, memoNum, memo-->
+<!--              FROM (SELECT memoNum,memo-->
+<!--                    FROM memo WHERE memberId=#{memberId})-->
+<!--            ORDER BY memoNum DESC) where REGEXP_LIKE(memo,#{keyword})-->
+<!--        WHERE RN BETWEEN (#{section}-1)*90+(#{pageNum}-1)*9+1 AND (#{section}-1)*90+(#{pageNum})*9-->
+<!--    </select>-->
+
+
     <select id="selectSearchPaging" parameterType="com.mon.memo.domain.Paging" resultType="com.mon.memo.domain.Memo">
         SELECT RN ,memoNum, memo
         FROM
-            (SELECT ROWNUM as RN ,memoNum, memo
-            FROM (SELECT * FROM memo
-            ORDER BY memoNum DESC) where REGEXP_LIKE(memo,#{keyword}))
-        WHERE RN BETWEEN (#{section}-1)*90+(#{pageNum}-1)*9+1 AND (#{section}-1)*90+(#{pageNum})*9
+            (SELECT memoNum,memo, row_number() over (order by memoNum) as RN
+             FROM (SELECT * FROM memo m1 join member m2 on m1.MEMBERID=m2.MEMBERID where m1.MEMBERID=#{memberId}
+                   ORDER BY memoNum DESC) where REGEXP_LIKE(memo,#{keyword}))b2
+            WHERE RN BETWEEN (#{section}-1)*90+(#{pageNum}-1)*9+1 AND (#{section}-1)*90+(#{pageNum})*9
     </select>
 
 </mapper>

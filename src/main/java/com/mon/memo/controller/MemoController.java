@@ -42,17 +42,16 @@ public class MemoController {
     }
 
     @GetMapping(value = "/memo") //저장된 메모 불러오기
-    public String saved(Memo memo, Login login, Errors errors, Model model, HttpSession session,
+    public String saved(Memo memo, Login login, Model model, HttpSession session,
                         @RequestParam(value = "section", defaultValue="1") int section,
                         @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                        @RequestParam(value="keyword", required = false) String keyword,
-                        @ModelAttribute("Paging") Paging paging) {
+                        @RequestParam(value="keyword", required = false) String keyword) {
 
         LoginInfo log = (LoginInfo) session.getAttribute("loginInfo");
         String memberId = log.getId();
 
-        if (keyword==null) {
-            paging = new Paging(memberId, section, pageNum);
+        if (keyword==null || keyword.equals("")) {
+            Paging paging = new Paging(memberId, section, pageNum);
 
             int totalCnt = memoService.pagingCount(memberId);
 
@@ -66,9 +65,18 @@ public class MemoController {
             model.addAttribute("savedmemo", memoall);
             System.out.println("키워드 없음 실행");
 
+            System.out.println(totalCntJudge);
+            System.out.println(totalCnt);
+            System.out.println(section);
+            System.out.println(pageNum);
+            System.out.println(memoall);
+            System.out.println(keyword);
+
+            return "memo/memo";
+
         }else if(keyword!=null){
 
-            paging = new Paging(memberId, keyword, section, pageNum);
+            Paging paging = new Paging(memberId, keyword, section, pageNum);
             int totalCnt = memoService.pagingCountSearch(paging);
 
             List<Memo> memoall = memoService.selectSearchPaging(paging);
@@ -82,6 +90,14 @@ public class MemoController {
             model.addAttribute("keyword", keyword);
             System.out.println("키워드 있음 실행");
 
+            System.out.println(totalCntJudge);
+            System.out.println(totalCnt);
+            System.out.println(section);
+            System.out.println(pageNum);
+            System.out.println(memoall);
+            System.out.println(keyword);
+            return "memo/memo";
+
         }
 
         return "memo/memo";
@@ -94,7 +110,6 @@ public class MemoController {
                          @RequestParam(value = "section", defaultValue = "1") int section,
                          @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                          @RequestParam(value="keyword", required = false) String keyword,
-                         @ModelAttribute("Paging") Paging paging,
                          HttpSession session){
 
         LoginInfo log = (LoginInfo) session.getAttribute("loginInfo");
@@ -104,7 +119,7 @@ public class MemoController {
             memoService.delete(memoNum);
             System.out.println("삭제완료");
 
-            paging = new Paging(memberId, section, pageNum);
+            Paging paging = new Paging(memberId, section, pageNum);
 
             int totalCnt = memoService.pagingCount(memberId);
 
@@ -123,7 +138,7 @@ public class MemoController {
             memoService.delete(memoNum);
             System.out.println("삭제완료");
 
-            paging = new Paging(memberId, keyword, section, pageNum);
+            Paging paging = new Paging(memberId, keyword, section, pageNum);
             int totalCnt = memoService.pagingCountSearch(paging);
 
             List<Memo> memoall = memoService.selectSearchPaging(paging);
@@ -163,6 +178,14 @@ public class MemoController {
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("savedmemo", memoall);
         model.addAttribute("keyword", keyword);
+
+        System.out.println(totalCntJudge);
+        System.out.println(totalCnt);
+        System.out.println(section);
+        System.out.println(pageNum);
+        System.out.println(memoall);
+        System.out.println(keyword);
+
 
         return "memo/memo";
     }

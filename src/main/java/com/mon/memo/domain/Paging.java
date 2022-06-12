@@ -1,5 +1,8 @@
 package com.mon.memo.domain;
 
+import lombok.Data;
+
+@Data
 public class Paging {
     private String memberId;
     private String keyword;

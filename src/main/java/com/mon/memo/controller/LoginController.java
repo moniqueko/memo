@@ -24,14 +24,14 @@ public class LoginController {
     private final MemoService memoService;
 
     @RequestMapping("/signin")
-    public String login(Model model, @CookieValue(value="rememberId", required=false) Cookie cookie) {
+    public String login(Model model, @CookieValue(value = "rememberId", required = false) Cookie cookie) {
 
         model.addAttribute("loginCommand", new Login()); //이것 지우면 작동 안함...
 
-        if(cookie!=null) {
-            System.out.println("쿠키값"+cookie.getValue());
-            String cookieval=cookie.getValue();
-            model.addAttribute("cookie",cookieval); //쿠키저장되어있으면 모델에 전달
+        if (cookie != null) {
+            System.out.println("쿠키값" + cookie.getValue());
+            String cookieval = cookie.getValue();
+            model.addAttribute("cookie", cookieval); //쿠키저장되어있으면 모델에 전달
         }
 
         return "signin/form";
@@ -40,17 +40,17 @@ public class LoginController {
     @RequestMapping("/signout")
     public String logout(HttpSession session) {
         session.invalidate(); //세션에 저장된 모든 데이터를 제거
-        return "redirect:/";
+        return "index";
     }
 
     @RequestMapping(value = "/signin/loginExecute", method = RequestMethod.POST)
-    public String submit(@ModelAttribute("Paging") Paging paging,
-            @ModelAttribute Login login, Errors errors, HttpSession session,
-                         @RequestParam(value="rememberlogin",required=false) Boolean rememberlogin,
+    public String submit(
+                         @ModelAttribute Login login, Errors errors, HttpSession session,
+                         @RequestParam(value = "rememberlogin", required = false) Boolean rememberlogin,
                          HttpServletResponse response, Model model, BindingResult bindingResult,
-                         @RequestParam(value = "section", defaultValue="1") int section,
+                         @RequestParam(value = "section", defaultValue = "1") int section,
                          @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                         @RequestParam(value="keyword", required = false) String keyword
+                         @RequestParam(value = "keyword", required = false) String keyword
     ) { // 폼에서 로그인 기능을 요청
 
         if (errors.hasErrors()) {
@@ -58,27 +58,27 @@ public class LoginController {
         }
 
         try {
-            if(rememberlogin!=null) {// 아이디 비밀번호 기억 체크 되어있다면 쿠키생성
+            if (rememberlogin != null) {// 아이디 비밀번호 기억 체크 되어있다면 쿠키생성
                 Cookie rememberId = new Cookie("rememberId", login.getId());
                 rememberId.setMaxAge(60 * 10);
                 rememberId.setPath("/");
                 response.addCookie(rememberId);
 
-            }else if(rememberlogin==null){
-                Cookie deleteId = new Cookie("rememberId", null) ;
-                deleteId.setMaxAge(0) ;
-                response.addCookie(deleteId) ;
+            } else if (rememberlogin == null) {
+                Cookie deleteId = new Cookie("rememberId", null);
+                deleteId.setMaxAge(0);
+                response.addCookie(deleteId);
             }
 
-            LoginInfo loginInfo = loginInfoService.check(login.getId(), login.getEmail(), login.getNo(),
-                    login.getPw());
+            LoginInfo loginInfo = loginInfoService.check(login.getId(),login.getPw());
 
             // 로그인 정보를 기록할 세션 코드
             session.setAttribute("loginInfo", loginInfo);
-            String memberId = loginInfo.getId();
+            String memberId = login.getId();
 
-            if (keyword==null) {
-                paging = new Paging(memberId, section, pageNum);
+            if (keyword == null || keyword.equals("")) {
+
+                Paging paging = new Paging(memberId, section, pageNum);
 
                 int totalCnt = memoService.pagingCount(memberId);
 
@@ -90,15 +90,27 @@ public class LoginController {
                 model.addAttribute("section", section);
                 model.addAttribute("pageNum", pageNum);
                 model.addAttribute("savedmemo", memoall);
+                session.setAttribute("loginInfo", loginInfo);
+
                 System.out.println("키워드 없음 실행");
 
-            }else if(keyword!=null){
+                System.out.println(totalCntJudge);
+                System.out.println(totalCnt);
+                System.out.println(section);
+                System.out.println(pageNum);
+                System.out.println(memoall);
+                System.out.println(keyword);
+                System.out.println(loginInfo);
 
-                paging = new Paging(memberId, keyword, section, pageNum);
+                return "memo/memo";
+
+            } else if (keyword != null) {
+
+                Paging paging = new Paging(memberId, keyword, section, pageNum);
                 int totalCnt = memoService.pagingCountSearch(paging);
 
                 List<Memo> memoall = memoService.selectSearchPaging(paging);
-                String totalCntJudge =  memoService.totalCntJudge(totalCnt);
+                String totalCntJudge = memoService.totalCntJudge(totalCnt);
 
                 model.addAttribute("totalCntJudge", totalCntJudge);
                 model.addAttribute("totalCnt", totalCnt);
@@ -106,29 +118,38 @@ public class LoginController {
                 model.addAttribute("pageNum", pageNum);
                 model.addAttribute("savedmemo", memoall);
                 model.addAttribute("keyword", keyword);
+                session.setAttribute("loginInfo", loginInfo);
                 System.out.println("키워드 있음 실행");
 
-            }
+                System.out.println(totalCntJudge);
+                System.out.println(totalCnt);
+                System.out.println(section);
+                System.out.println(pageNum);
+                System.out.println(memoall);
+                System.out.println(keyword);
+                System.out.println(loginInfo);
 
-            return "memo/memo";
+                return "memo/memo";
+            }return "memo/memo";
 
         } catch (IdPasswordNotMatchingException e) {
 
             Member member = loginInfoService.checkId(login.getId());
-            System.out.println(member+"IdPasswordNotMatchingException 멤버정보 출력");
+            System.out.println(member + "IdPasswordNotMatchingException 멤버정보 출력");
 
             String valid = member.getMemberId();
 
-            if(!valid.equals("1")){ //회원은 존재할때
-                bindingResult.addError(new FieldError("loginCommand","id","비밀번호를 확인해 주세요."));
+            if (!valid.equals("1")) { //회원은 존재할때
+                bindingResult.addError(new FieldError("loginCommand", "id", "비밀번호를 확인해 주세요."));
 
-            }else if(valid.equals("1")){ //회원이 없을때
-                bindingResult.addError(new FieldError("loginCommand","id","존재하지 않는 회원입니다."));
+            } else if (valid.equals("1")) { //회원이 없을때
+                bindingResult.addError(new FieldError("loginCommand", "id", "존재하지 않는 회원입니다."));
             }
 
             return "signin/form";
         }
-
     }
 
+
 }
+

@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface MemoService {
     void write(MemoCommand memoCommand);
-    void delete(Integer memoNum);
+    void delete(int memoNum);
 
     List<Memo> savedMemo(String memberId);
     List<Memo> selectAllMemo(Paging paging);
 
     String totalCntJudge(int totalCnt);
-    Integer pagingCount(String memberId);
+    int pagingCount(String memberId);
 
-    Integer pagingCountSearch(Paging paging);
+    int pagingCountSearch(Paging paging);
     List<Memo> selectSearchPaging(Paging paging);
 
 

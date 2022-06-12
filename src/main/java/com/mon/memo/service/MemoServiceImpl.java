@@ -28,7 +28,7 @@ public class MemoServiceImpl implements MemoService{
     }
 
     @Override
-    public void delete(Integer memoNum) {
+    public void delete(int memoNum) {
         mapper.deleteMemo(memoNum);
     }
 
@@ -39,13 +39,13 @@ public class MemoServiceImpl implements MemoService{
 
 
     @Override
-    public Integer pagingCount(String memberId) {
+    public int pagingCount(String memberId) {
         Integer count = mapper.pagingCount(memberId);
         return count;
     }
 
     @Override
-    public Integer pagingCountSearch(Paging paging) {
+    public int pagingCountSearch(Paging paging) {
         Integer count = mapper.pagingCountSearch(paging);
         return count;
     }
