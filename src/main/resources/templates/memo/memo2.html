@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Mon mémo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+
+<!--    <link th:href="@{/css/style.css}" rel="stylesheet">-->
+
+<!--    <style>-->
+<!--        #grid-container {-->
+<!--            display: grid;-->
+<!--            gap: 50px;-->
+<!--            grid-template-columns: auto auto auto;-->
+<!--            background-color: #ffffff;-->
+<!--            padding: 10px;-->
+<!--        }-->
+
+<!--        .grid-item {-->
+<!--            width: 300px;-->
+<!--            height: 250px;-->
+<!--            background-color: wheat;-->
+<!--            padding: 15px;-->
+<!--            border: none;-->
+<!--            border-radius: 10px;-->
+<!--        }-->
+<!--        .grid-text{-->
+<!--            font-size: 12px;-->
+<!--            text-align: center;-->
+<!--        }-->
+<!--        .grid-item a{-->
+<!--            width: 20px;-->
+<!--            height: 20px;-->
+<!--            margin-top: 5px;-->
+<!--            margin-right:5px;-->
+<!--            float: right;-->
+<!--            color: saddlebrown;-->
+<!--        }-->
+<!--    </style>-->
+
+</head>
+<header>
+    <div style="text-align: center">
+    <h1>Mon mémo</h1>
+        <th:block th:if="${loginInfo!=null}"><a href="/signout">[ Log out ]</a></th:block>
+    </div>
+</header>
+
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="/memo/search" method="GET">
+                <div style="text-align: center">
+                <input name="keyword" type="text" placeholder="Search memo content" style="background-color: white;border: none"> <button type="submit" class="btn btn-primary btn-sm" style="background-color: #865439; border: 0;"><i class="fas fa-search"></i></button>
+        </div>
+        </form><br><br>
+        <p>You can write your memo upto 300 characters.</p>
+
+        <form name="writememo" action="/write">
+        <input type="text" id="write" name="memo" placeholder="Write your memo here"><br><br>
+            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
+            <br><br>
+        </form>
+
+        </div>
+    </div>
+
+
+    <div id="grid-container">
+        <div class="grid-item" th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
+            <a th:href="@{/memo/delete/{memoNum}(memoNum=${list.memoNum})}"><i class="far fa-window-close"></i></a>
+            <div class="grid-text" th:text="${list.memo}"></div>
+        </div>
+        <br><br>
+        <div th:if="${keyword==null}" style="text-align: center"><!--  페이징 처리 -->
+            실행
+            <th:block th:switch="${totalCntJudge}">
+                <th:block th:case="91">
+                    <th:block th:if="${(section)*90<totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/memo(section=${section}-1, pageNum=10)}"> << BACK </a>
+                            </th:block>
+                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                            <th:block th:if="${page==10}">
+                                <a th:href="@{/memo(section=${section+1}, pageNum=1)}"> >> NEXT </a>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${(section)*90>totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << BACK </a>
+                            </th:block>
+                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${(section)*90==totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
+                            </th:block>
+                            <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        </th:block>
+                    </th:block>
+
+                </th:block>
+                <th:block th:case="90">
+                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                    </th:block>
+                </th:block>
+                <th:block th:case="99">
+                    <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
+                        <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}"></span></a>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </div>
+
+        <div th:if="${keyword!=null}" style="text-align: center">  <!--  검색 페이징 처리 -->
+            <th:block th:switch="${totalCntJudge}">
+                <th:block th:case="91">
+                    <th:block th:if="${(section)*90<totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/memo/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << BACK </a>
+                            </th:block>
+                            <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                            <th:block th:if="${page==10}">
+                                <a th:href="@{/memo/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> NEXT </a>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${(section)*90>totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << BACK </a>
+                            </th:block>
+                            <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        </th:block>
+                    </th:block>
+
+                    <th:block th:if="${(section)*90==totalCnt}">
+                        <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
+                            <th:block th:if="${section >1 && page==1}">
+                                <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << BACK </a>
+                            </th:block>
+                            <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}"></span></a>
+                        </th:block>
+                    </th:block>
+
+                </th:block>
+                <th:block th:case="90">
+                    <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
+                    </th:block>
+                </th:block>
+                <th:block th:case="99">
+                    <th:block th:each="page : ${#numbers.sequence(1,((totalCnt+8)/9),1)}">
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}"></span></a>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </div>
+
+
+    </div>
+
+
+    </div>
+
+</div>
+<br><br>
+
+<script>
+    function Writememo(){
+        let memo = document.forms["writememo"]["memo"].value;
+
+        console.log(memo+" 정상출력");
+
+        // let data= {
+        //     "memo" : [memo],
+        //     "num" : [no]
+        //
+        // };
+
+        $.ajax({
+            type : 'POST',
+            url : '/memo/write',
+            data : JSON.stringify(memo),
+            dataType :'json',
+            accept: 'application/json',
+            contentType : 'application/json; charset=UTF-8',
+            success : function(result) {
+                console.log("데이터 보내기 성공");
+                console.log(result);
+
+                let memosave = document.getElementById('grid-container');
+                console.log(memosave);
+
+                let newmemo = document.createElement('div'); // 새 메모
+                let deletebtn = document.createElement('button'); // 삭제 버튼
+                let btnatt = document.createElement('a')
+                let deletebtndiv = document.createElement('div');
+
+
+                memosave.prepend(newmemo); //메모장 앞에서부터 추가되게 함
+                newmemo.setAttribute("class","grid-item");
+
+                deletebtndiv.setAttribute("class","deletebtndiv"); //위치지정
+                deletebtn.setAttribute("onclick","test()");
+                deletebtn.setAttribute("class", "far fa-window-close");
+
+                btnatt.setAttribute("href","../memo/delete/${}");
+                deletebtn.appendChild(btnatt);
+
+                deletebtndiv.appendChild(deletebtn); //div에 버튼넣기
+                newmemo.appendChild(deletebtndiv);
+
+                newmemo.innerHTML = memo;
+
+            },
+            error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: 에러발생"+"\n"+"error: "+error);
+            }
+        }); // ajax 끝
+
+    }
+</script>
+</body>
+<footer>
+
+
+    <br><br>
+    <div style="text-align: center"><h6>Copyrights All Reserved By Monique</h6></div>
+</footer>
+</html>

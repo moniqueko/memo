@@ -36,9 +36,9 @@
         ORDER BY memoNum DESC
     </select>
 
-    <select id="selectAllMemo" parameterType="com.mon.memo.domain.Paging" resultType="com.mon.memo.domain.Memo">
+    <select id="selectAllMemo" parameterType="com.mon.memo.domain.Paging" resultType="com.mon.memo.domain.Memo"><!-- 가장 알맞은 배열 출력 -->
         SELECT *
-        FROM (SELECT ROWNUM AS RN, memoNum, memo
+        FROM (SELECT memoNum,memo, row_number() over (order by memoNum DESC) as RN
               FROM (SELECT memoNum,memo
                     FROM memo WHERE memberId=#{memberId})
                     ORDER BY memoNum DESC)

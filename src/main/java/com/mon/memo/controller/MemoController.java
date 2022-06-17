@@ -52,6 +52,7 @@ public class MemoController {
 
         if (keyword==null || keyword.equals("")) {
             Paging paging = new Paging(memberId, section, pageNum);
+            paging.setMemberId(memberId);
 
             int totalCnt = memoService.pagingCount(memberId);
 
