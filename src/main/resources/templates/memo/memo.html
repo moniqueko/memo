@@ -10,6 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
     <link th:href="@{/css/style.css}" rel="stylesheet">
 
@@ -29,15 +30,13 @@
         }
 
         .pagenum{
-            background-color: #a28365;
-            padding: 7px;
-            margin: 2px;
-            color: black;
-            border-radius: 20px;
-            border: none;
+            padding: 3px 8px 3px 8px;
+            color: #605039;
         }
         .pagenum:hover{
             background-color: #c99056;
+            border-radius: 15px;
+            color: white;
         }
 
         #grid-container {
@@ -76,7 +75,7 @@
     <div class="container">
             <div class="search_content">
             <th:block th:if="${session.loginInfo!=null}">
-                [[${session.loginInfo.id}]], welcome back! <a href="/signout">[ Log out ]</a>
+                [[${session.loginInfo.id}]], welcome back! <a href="/signout"><i class='fas fa-sign-out-alt'></i> Log out</a>
             </th:block>
             </div>
         </div>
@@ -90,7 +89,7 @@
 
         <form action="/memo/search" method="GET">
             <div style="text-align: center">
-                <input name="keyword" type="text" placeholder="Search memo content" style="background-color: white;border: none"> <button type="submit" class="btn btn-primary btn-sm" style="background-color: #865439; border: 0;"><i class="fas fa-search"></i></button>
+                <input name="keyword" type="text" placeholder="Search by content" style="background-color: white;border: none"> <button type="submit" class="btn btn-primary btn-sm" style="background-color: #865439; border: 0;"><i class="fas fa-search"></i></button>
             </div>
         </form>
         </div>
@@ -143,7 +142,6 @@
             accept: 'application/json',
             contentType : 'application/json; charset=UTF-8',
             success : function(result) {
-                console.log("데이터 보내기 성공");
                 console.log(result);
 
                 let memosave = document.getElementById('grid-container');
@@ -187,11 +185,11 @@
                 <th:block th:if="${(section)*90<totalCnt}">
                     <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
                         <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo(section=${section}-1, pageNum=10)}"> << back </a>
+                            <a th:href="@{/memo(section=${section}-1, pageNum=10)}"> <i class='fas fa-chevron-left'></i> </a>
                         </th:block>
                         <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}" class="pagenum"></span></a>
                         <th:block th:if="${page==10}">
-                            <a th:href="@{/memo(section=${section+1}, pageNum=1)}"> >> next </a>
+                            <a th:href="@{/memo(section=${section+1}, pageNum=1)}"> <i class='fas fa-chevron-right'></i> </a><!--next-->
                         </th:block>
                     </th:block>
                 </th:block>
@@ -199,7 +197,7 @@
                 <th:block th:if="${(section)*90>totalCnt}">
                     <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
                         <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << back </a>
+                            <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> <i class='fas fa-chevron-left'></i> </a>
                         </th:block>
                         <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}" class="pagenum"></span></a>
                     </th:block>
@@ -208,14 +206,14 @@
                 <th:block th:if="${(section)*90==totalCnt}">
                     <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
                         <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> << </a>
+                            <a th:href="@{/memo(section=${(section)-1}, pageNum=10)}"> <i class='fas fa-chevron-left'></i> </a>
                         </th:block>
                         <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${((section)-1)*10+page}" class="pagenum"></span></a>
                     </th:block>
                 </th:block>
 
             </th:block>
-            <th:block th:case="90">
+            <th:block th:case="100">
                 <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
                     <a th:href="@{/memo(section=${section}, pageNum=${page})}"><span th:text="${page}" class="pagenum"></span></a>
                 </th:block>
@@ -234,11 +232,11 @@
                 <th:block th:if="${(section)*90<totalCnt}">
                     <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
                         <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> << back </a>
+                            <a th:href="@{/memo/search(section=${section}-1, pageNum=10, keyword=${keyword})}"> <i class='fas fa-chevron-left'></i> </a>
                         </th:block>
                         <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}" class="pagenum"></span></a>
                         <th:block th:if="${page==10}">
-                            <a th:href="@{/memo/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> >> next </a>
+                            <a th:href="@{/memo/search(section=${section+1}, pageNum=1, keyword=${keyword})}"> <i class='fas fa-chevron-right'></i> </a>
                         </th:block>
                     </th:block>
                 </th:block>
@@ -246,23 +244,23 @@
                 <th:block th:if="${(section)*90>totalCnt}">
                     <th:block th:each="page : ${#numbers.sequence(1, (((totalCnt+8)-((section)-1)*100)/9) ,1)}">
                         <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << back </a>
+                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> <i class='fas fa-chevron-left'></i> </a>
                         </th:block>
-                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}" th:class="pagenum"></span></a>
+                        <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}" class="pagenum"></span></a>
                     </th:block>
                 </th:block>
 
                 <th:block th:if="${(section)*90==totalCnt}">
                     <th:block th:each="page : ${#numbers.sequence(1, 10 ,1)}">
                         <th:block th:if="${section >1 && page==1}">
-                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> << back </a>
+                            <a th:href="@{/memo/search(section=${(section)-1}, pageNum=10, keyword=${keyword})}"> <i class='fas fa-chevron-left'></i> </a>
                         </th:block>
                         <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${((section)-1)*10+page}" class="pagenum"></span></a>
                     </th:block>
                 </th:block>
 
             </th:block>
-            <th:block th:case="90">
+            <th:block th:case="100">
                 <th:block th:each="page : ${#numbers.sequence(1,10,1)}">
                     <a th:href="@{/memo/search(section=${section}, pageNum=${page}, keyword=${keyword})}"><span th:text="${page}" class="pagenum"></span></a>
                 </th:block>
