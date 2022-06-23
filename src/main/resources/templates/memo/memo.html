@@ -101,9 +101,9 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <br><br>
-        <form name="writememo" action="/write">
+        <form action="/write" commandName="memoForm" method="POST"><!--메모 작성하는 곳-->
             <textarea id="write" name="memo" placeholder="You can write your memo here upto 300 characters."></textarea><br><br>
-            <input type="button" onclick="Writememo();" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
+            <input type="submit" id="btn" value="Write" class="btn btn-login btn-block" style="background-color: #e0C097; border: 0;">
             <br><br>
         </form>
 
@@ -113,7 +113,7 @@
 
     <div id="grid-container">
         <div class="grid-item" th:if="${!savedmemo.isEmpty()}" th:each="list :${savedmemo}">
-            <a th:href="@{/memo/delete/{memoNum}(memoNum=${list.memoNum})}"><i class="far fa-window-close"></i></a>
+            <a th:href="@{/memo/{memoNum}(memoNum=${list.memoNum})}"><i class="far fa-window-close"></i></a>
             <div class="grid-text" th:text="${list.memo}"></div>
         </div>
 
@@ -122,60 +122,7 @@
 </div>
 <br><br>
 
-<script>
-    function Writememo(){
-        let memo = document.forms["writememo"]["memo"].value;
 
-        console.log(memo+" 정상출력");
-
-        // let data= {
-        //     "memo" : [memo],
-        //     "num" : [no]
-        //
-        // };
-
-        $.ajax({
-            type : 'POST',
-            url : '/memo/write',
-            data : JSON.stringify(memo),
-            dataType :'json',
-            accept: 'application/json',
-            contentType : 'application/json; charset=UTF-8',
-            success : function(result) {
-                console.log(result);
-
-                let memosave = document.getElementById('grid-container');
-                console.log(memosave);
-
-                let newmemo = document.createElement('div'); // 새 메모
-                let deletebtn = document.createElement('button'); // 삭제 버튼
-                let btnatt = document.createElement('a')
-                let deletebtndiv = document.createElement('div');
-
-
-                memosave.prepend(newmemo); //메모장 앞에서부터 추가되게 함
-                newmemo.setAttribute("class","grid-item");
-
-                deletebtndiv.setAttribute("class","deletebtndiv"); //위치지정
-                deletebtn.setAttribute("onclick","test()");
-                deletebtn.setAttribute("class", "far fa-window-close");
-
-                btnatt.setAttribute("href","../memo/delete/${}");
-                deletebtn.appendChild(btnatt);
-
-                deletebtndiv.appendChild(deletebtn); //div에 버튼넣기
-                newmemo.appendChild(deletebtndiv);
-
-                newmemo.innerHTML = memo;
-
-            },
-            error: function(request, status, error){
-                alert("code: "+request.status+"\n"+"message: 에러발생"+"\n"+"error: "+error);
-            }
-        }); // ajax 끝
-
-    }
-</script>
 </body>
 
 <footer>

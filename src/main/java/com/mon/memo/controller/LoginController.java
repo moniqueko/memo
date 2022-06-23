@@ -23,10 +23,12 @@ public class LoginController {
     private final LoginInfoService loginInfoService;
     private final MemoService memoService;
 
+
     @RequestMapping("/signin")
     public String login(Model model, @CookieValue(value = "rememberId", required = false) Cookie cookie) {
 
         model.addAttribute("loginCommand", new Login()); //이것 지우면 작동 안함...
+
 
         if (cookie != null) {
             System.out.println("쿠키값" + cookie.getValue());
@@ -53,9 +55,12 @@ public class LoginController {
                          @RequestParam(value = "keyword", required = false) String keyword
     ) { // 폼에서 로그인 기능을 요청
 
+        model.addAttribute("memoForm",new MemoCommand());
+
         if (errors.hasErrors()) {
             return "signin/error";
         }
+
 
         try {
             if (rememberlogin != null) {// 아이디 비밀번호 기억 체크 되어있다면 쿠키생성

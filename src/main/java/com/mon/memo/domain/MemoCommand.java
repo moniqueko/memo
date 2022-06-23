@@ -6,14 +6,13 @@ import lombok.Data;
 public class MemoCommand {
         private int mno;
         private String id;
+        private String memo;
 
         public MemoCommand(int mno, String id, String memo) {
                 this.mno = mno;
                 this.id = id;
                 this.memo = memo;
         }
-
-        private String memo;
 
         public MemoCommand(String id, String memo) {
                 this.id = id;
